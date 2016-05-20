@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<fit>
+  <combined_model>
+    <parse_model>
+      <n_variables>1</n_variables>
+      <n_functions>1</n_functions>
+
+      <variables>
+	  <variable>
+	    <number>1</number>
+	    <name>t</name>
+	  </variable>
+       </variables>
+
+       <constants>
+	 <name>T</name>
+       </constants>
+
+       <fit_domain>
+	    <variable_name>t</variable_name>
+	    <range>
+	      <min>8</min>
+	      <max>12</max>
+	    </range>
+       </fit_domain>
+
+       <functions>
+	 <function>
+	   <number>1</number>
+	   <definition>A*exp(-E*t)+B*exp((-E+dE1)*t)</definition>
+	 </function>
+       </functions>
+
+	<parameters>
+	     <name>A</name>
+	     <name>E</name>
+	     <name>B</name>
+	     <name>dE1</name>
+	</parameters>
+
+      <data_file>
+        <file_type>ASCII</file_type>
+	<file_name>./for_xmbf_tmp</file_name>
+      </data_file>
+
+     </parse_model>
+  </combined_model>
+
+  <fit_settings>
+    <restrict_data_range>false</restrict_data_range>
+    <data_range_min>1</data_range_min>
+    <data_range_max>1000</data_range_max>
+    <chi_sqr_extra_term_enabled>false</chi_sqr_extra_term_enabled>
+    <bayesian>true</bayesian>
+    <num_diff_first_order>true</num_diff_first_order>
+    <second_deriv_covariance>true</second_deriv_covariance>
+    <second_deriv_minimization>false</second_deriv_minimization>
+    <num_diff_step>1e-09</num_diff_step>
+    <random_priors>false</random_priors>
+    <start_lambda>0.001</start_lambda>
+    <lambda_factor>10</lambda_factor>
+    <chi_sqr_tolerance>0.0001</chi_sqr_tolerance>
+    <chi_sqr_per_dof_tolerance>false</chi_sqr_per_dof_tolerance>
+    <bootstrap_normalization>false</bootstrap_normalization>
+    <inversion_method>svd_ratio_cut</inversion_method>
+    <svd_fixed_cut>0</svd_fixed_cut>
+    <svd_ratio_cut>1e-10</svd_ratio_cut>
+    <svd_absolute_cut>1e-12</svd_absolute_cut>
+    <max_iterations>1000</max_iterations>
+    <bin_size>1</bin_size>
+    <bootstrap_samples>100</bootstrap_samples>
+    <use_bse_file>false</use_bse_file>
+    <bse_file></bse_file>
+    <restrict_bootstrap_range>false</restrict_bootstrap_range>
+    <bootstrap_range_min>1</bootstrap_range_min>
+    <bootstrap_range_max>50</bootstrap_range_max>
+  </fit_settings>
+  <parameter_values>
+    <parameter>
+      <name>E</name>
+      <start_value>0.5</start_value>
+      <prior>0.22</prior> 
+      <prior_width>1e-2</prior_width>
+    </parameter>
+    <parameter>
+      <name>dE1</name>
+      <start_value>0.5</start_value>
+      <prior>0.22</prior> 
+      <prior_width>1e-2</prior_width>
+    </parameter>
+    <parameter>
+      <name>A</name>
+      <start_value>1</start_value>
+      <prior>0.22</prior> 
+      <prior_width>1e-2</prior_width>
+    </parameter>
+    <parameter>
+      <name>B</name>
+      <start_value>1</start_value>
+      <prior>0.22</prior> 
+      <prior_width>1e-2</prior_width>
+    </parameter>
+  </parameter_values>
+  <constant_values>
+    <constant>
+      <name>T</name>
+      <value>64</value>
+    </constant>
+  </constant_values>
+
+</fit>
