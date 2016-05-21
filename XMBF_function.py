@@ -7,5 +7,4 @@ def info(something="", verbose=True):
     assert isinstance(verbose, bool)
     if verbose:
         print(something)
-        print('\n')
 ###################################

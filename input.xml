@@ -18,8 +18,8 @@
        <fit_domain>
 	    <variable_name>t</variable_name>
 	    <range>
-	      <min>60</min>
-	      <max>64</max>
+	      <min>1</min>
+	      <max>5</max>
 	    </range>
        </fit_domain>
 
@@ -91,7 +91,7 @@
     </parameter>
     <parameter>
       <name>A</name>
-      <start_value>50000</start_value>
+      <start_value>50000.0</start_value>
     </parameter>
   </parameter_values>
   <constant_values>
