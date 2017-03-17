@@ -27,15 +27,13 @@
        <functions>
 	 <function>
 	   <number>1</number>
-	   <definition>A*exp(-E*t)+B*exp((-E+dE1)*t)</definition>
+	   <definition>A0*exp(-E0*t)</definition>
 	 </function>
        </functions>
 
 	<parameters>
-	     <name>A</name>
-	     <name>E</name>
-	     <name>B</name>
-	     <name>dE1</name>
+	     <name>A0</name>
+	     <name>E0</name>
 	</parameters>
 
       <data_file>
@@ -51,7 +49,7 @@
     <data_range_min>1</data_range_min>
     <data_range_max>1000</data_range_max>
     <chi_sqr_extra_term_enabled>false</chi_sqr_extra_term_enabled>
-    <bayesian>true</bayesian>
+    <bayesian>false</bayesian>
     <num_diff_first_order>true</num_diff_first_order>
     <second_deriv_covariance>true</second_deriv_covariance>
     <second_deriv_minimization>false</second_deriv_minimization>
@@ -77,25 +75,37 @@
   </fit_settings>
   <parameter_values>
     <parameter>
-      <name>E</name>
+      <name>E0</name>
       <start_value>0.5</start_value>
       <prior>0.22</prior> 
       <prior_width>1e-2</prior_width>
     </parameter>
     <parameter>
-      <name>dE1</name>
+      <name>E1</name>
       <start_value>0.5</start_value>
       <prior>0.22</prior> 
       <prior_width>1e-2</prior_width>
     </parameter>
     <parameter>
-      <name>A</name>
+      <name>E2</name>
+      <start_value>0.5</start_value>
+      <prior>0.22</prior> 
+      <prior_width>1e-2</prior_width>
+    </parameter>
+    <parameter>
+      <name>A0</name>
       <start_value>1</start_value>
       <prior>0.22</prior> 
       <prior_width>1e-2</prior_width>
     </parameter>
     <parameter>
-      <name>B</name>
+      <name>A1</name>
+      <start_value>1</start_value>
+      <prior>0.22</prior> 
+      <prior_width>1e-2</prior_width>
+    </parameter>
+    <parameter>
+      <name>A2</name>
       <start_value>1</start_value>
       <prior>0.22</prior> 
       <prior_width>1e-2</prior_width>

@@ -1,13 +1,12 @@
 import xml.etree.ElementTree as Et
 import numpy as np
-import XMBF_function as Xf
 import subprocess
 
 
 class SebParams:
     Fit_range_end = 36  # the end of fit range
     Init_test_range = 4  # the test range of first try
-    Tolerance_type = 1  # 1->chi^2; 2->QValue
+    Tolerance_type = 1  # 1 -> chi^2; 2 -> QValue
     Chi2_ratio_tolerance = 0.1  # \chi^2 ratio tolerance
     Chi2_abs_tolerance = 0.1  # \chi^2 absolute tolerance
     QValue_ratio_tolerance = 0.1  # QValue ratio tolerance
@@ -15,6 +14,9 @@ class SebParams:
     N_term = 3  # mass terms included in the fitting
     Verbose = False
     If_init_param = 0
+    trial_1_method = 2  #
+    trial_2_method = 1  #
+    trial_3_method = 1  #
 
     @classmethod
     def __init__(cls, fit_range_end=36, init_test_range=4, tolerance_type=1, verbose=True):
@@ -39,10 +41,9 @@ class XmbfParams:
     Input_file_name = "input_template.xml"  # input template
     t1 = 0  # t small
     t2 = 0  # t large
-    E = 0.0
-    Ee = 0.0
-    dE = np.zeros(10)  # never use dE[0]
-    dEe = np.zeros(10)  # never use dEe[0]
+
+    E = np.zeros(10)
+    Ee = np.zeros(10)
     A = np.zeros(10)
     Ae = np.zeros(10)
 
@@ -72,17 +73,9 @@ class XmbfParams:
         cls.set_t2(t22)
 
     @classmethod
-    def set_e_a(cls, ee, aa):
-        cls.A[0] = aa
-        cls.E = ee
-
-    @classmethod
-    def set_de_a(cls, dee, aa, index=1):
-        if index == 0:
-            Xf.info("wrong index!", True)
-            return
+    def set_e_a(cls, ee, aa, index=0):
         cls.A[index] = aa
-        cls.dE[index] = dee
+        cls.E[index] = ee
 
 
 class XmbfIo (XmbfParams):
@@ -127,7 +120,7 @@ class XmbfIo (XmbfParams):
 
 
 class XmbfFitting (XmbfParams):
-    result = b''
+    result = None
     If_fail = False
     X2 = 0.0
     Qv = 0.0
@@ -136,35 +129,28 @@ class XmbfFitting (XmbfParams):
     def do_fit(cls):
         cls.result = subprocess.check_output("./XMBF input.xml", shell=True, stderr=subprocess.STDOUT)
         cls.result = cls.result.split()
-        if b'Warning:' in cls.result:
+        # convert bytes to string
+        for i in range(0, len(cls.result)):
+            cls.result[i] = str(cls.result[i].decode("utf-8"))
+        if 'Warning:' in cls.result:
             cls.If_fail = True
-        if b'WARNING:' in cls.result:
+        if 'WARNING:' in cls.result:
             cls.If_fail = True
-        if b'chi^2/dof' in cls.result:
-            cls.X2 = float(cls.result[cls.result.index(b'chi^2/dof')+2])
+        if 'chi^2/dof' in cls.result:
+            cls.X2 = float(cls.result[cls.result.index('chi^2/dof')+2])
         else:
             cls.If_fail = True
-        if b'Q(dof/2,chi^2/2)' in cls.result:
-            cls.Qv = float(cls.result[cls.result.index(b'Q(dof/2,chi^2/2)')+2])
+        if 'Q(dof/2,chi^2/2)' in cls.result:
+            cls.Qv = float(cls.result[cls.result.index('Q(dof/2,chi^2/2)')+2])
         else:
             cls.If_fail = True
-        if b'A' in cls.result:
-            cls.A[0] = float(cls.result[cls.result.index(b'A')+2])
-            cls.Ae[0] = float(cls.result[cls.result.index(b'A')+3])
-        else:
-            cls.If_fail = True
-        if b'E' in cls.result:
-            cls.E = float(cls.result[cls.result.index(b'E')+2])
-            cls.Ee = float(cls.result[cls.result.index(b'E')+3])
-        else:
-            cls.If_fail = True
-        for i in range(1, 10):
-            if b'A'+bytes(i) in cls.result:
-                cls.A[i] = float(cls.result[cls.result.index(b'A')+2])
-                cls.Ae[i] = float(cls.result[cls.result.index(b'A')+3])
-            if b'E'+bytes(i) in cls.result:
-                cls.dE[i] = float(cls.result[cls.result.index(b'E')+2])
-                cls.dEe[i] = float(cls.result[cls.result.index(b'E')+3])
+        for i in range(0, 10):
+            if 'A'+str(i) in cls.result:
+                cls.A[i] = float(cls.result[cls.result.index('A'+str(i))+2])
+                cls.Ae[i] = float(cls.result[cls.result.index('A'+str(i))+3])
+            if 'E'+str(i) in cls.result:
+                cls.E[i] = float(cls.result[cls.result.index('E'+str(i))+2])
+                cls.Ee[i] = float(cls.result[cls.result.index('E'+str(i))+3])
 
     @classmethod
     def print(cls):
@@ -175,8 +161,8 @@ class XmbfFitting (XmbfParams):
             print('X2=%4.2f' % cls.X2, end=" \t")
             print('Qv=%4.2f' % cls.Qv, end=" \t")
             print('\033[0;32;m', end="")
-            print('E1=%4.2e' % cls.E + '(%4.2e)' % cls.Ee, end="\t")
-            print('A1=%4.2e' % cls.A[0] + '(%4.2e)' % cls.Ae[0], end="")
+            print('E0=%4.2e' % cls.E[0] + '(%4.2e)' % cls.Ee[0], end="\t")
+            print('A0=%4.2e' % cls.A[0] + '(%4.2e)' % cls.Ae[0], end="")
             print('\033[0m', end="")
             print()
 
@@ -197,8 +183,14 @@ class HandleInput (XmbfParams):
     def refresh(cls, name='input.xml'):
         cls.root[0][0][4][1][0].text = str(cls.t1)
         cls.root[0][0][4][1][1].text = str(cls.t2)
-        cls.root[2][0][1].text = str(cls.E)
-        cls.root[2][4][1].text = str(cls.A[0])
+
+        cls.root[2][0][1].text = str(cls.E[0])
+        cls.root[2][3][1].text = str(cls.A[0])
+        cls.root[2][1][1].text = str(cls.E[1])
+        cls.root[2][4][1].text = str(cls.A[1])
+        cls.root[2][2][1].text = str(cls.E[2])
+        cls.root[2][5][1].text = str(cls.A[2])
+
         cls.root[3][0][1].text = str(cls.N_t)
         cls.tree.write(name)
 
